@@ -1,54 +1,107 @@
+const buttons = document.querySelectorAll('button');  // the game buttons
+const result = document.getElementById('result');   // the result of each game
+const computer = document.getElementById('computer');   // the computer player
+const player = document.getElementById('player');   // the human player
+
+let playersChoice = '',
+  computersChoice = '',
+  winningText = '',
+  winner = '',
+  score = 0;
+
+//  add a 'click' event listener for each button
+buttons.forEach(btn => {
+  btn.addEventListener('click', playRound);
+});
+
+//  randomly return either 'Rock', 'Paper' or 'Scisors'
 function computerPlay() {
-  //  randomly return either 'Rock', 'Paper' or 'Scisors'
-  const theSelection = Math.floor((Math.random() * 3) + 1)
+  let theSelection = '';
+  const compPick = Math.floor((Math.random() * 3) + 1);
+  switch (compPick) {
+    case 1:
+      theSelection = 'rock';
+      break;
+    case 2:
+      theSelection = 'paper';
+      break;
+    case 3:
+      theSelection = 'scissors';
+      break;
+  }
+  return theSelection;
+}
 
-  if(theSelection === 1) {
-    return "rock";
-  } else if (theSelection === 2) {
-    return "paper";
-  } else {
-    return "scissors";
+function playRound(e) {
+  winningText = '';
+  computersChoice = computerPlay();
+  playersChoice = e.target.id;
+
+  if (playersChoice == computersChoice) {
+    winningText = "Tied! Try again.";
+    result.textContent = winningText;
+    return;
+  }
+
+  switch (computersChoice) {
+    case 'rock':
+      if (playersChoice == 'scissors') {
+        winningText = "Computer wins! Rock smashes scissors.";
+      } else {
+        winningText = "Player wins! Paper covers rock.";
+      }
+      break;
+    case 'paper':
+      if (playersChoice == 'rock') {
+        winningText = "Computer wins! Paper covers rock.";
+      } else {
+        winningText = "Player wins! Scissors cut paper.";
+      }
+      break;
+    case 'scissors':
+      if (playersChoice == 'rock') {
+        winningText = "Player wins! Rock smashes scissors.";
+      } else {
+        winningText = "Computer wins! Sissors cuts paper.";
+      }
+      break;
+  }
+
+  result.textContent = winningText;
+
+  //  increment the score of the winner
+  updateTheScoreboard(winningText);
+}
+
+function updateTheScoreboard(winner) {
+  //  check winningText for the winner
+  let theWinner = winner.split(" ");
+  if (winningText.startsWith('Computer')) {
+    giveTheComputerAPoint();
+  }
+  else if (winningText.startsWith('Player')) {
+    giveThePlayerAPoint();
+  }
+  if (score === 5) {
+    endGame();
   }
 }
 
-function playerPlay() {
-  //  randomly return either 'Rock', 'Paper' or 'Scisors'
-  //  replace the ramdom selection with live player interaction
-  //  once the program is near completion
-  const theSelection = Math.floor((Math.random() * 3) + 1)
+//  update the scoreboard
 
-  if(theSelection === 1) {
-    return "ROCK";
-  } else if (theSelection === 2) {
-    return "PAPER";
-  } else {
-    return "SCISSORS";
-  }
+function giveThePlayerAPoint() {
+  score = parseInt(player.textContent) + 1;
+  player.textContent = score;
+};
+
+function giveTheComputerAPoint() {
+  score = parseInt(computer.textContent) + 1;
+  computer.textContent = score;
+};
+
+function endGame() {
+  score = 0;
+  alert("Game over!");
+  player.textContent = score;
+  computer.textContent = score;
 }
-
-
-playerSelection = playerPlay().toLowerCase()
-computerSelection = computerPlay()
-
-playRound(playerSelection, computerSelection)
-
-function playRound(playerSelection, computerSelection) {
-  if (playerSelection === computerSelection) {
-    console.log("Tie -- Try again...");
-  } else if(playerSelection === "rock") {
-    console.log((computerSelection === "paper") 
-    ? "You Lose! Paper beats Rock." 
-    : "You Win! Rock beats scissors.")
-  } else if (playerSelection === "paper") {
-    console.log((playerSelection === "scissors") 
-    ? "You Lose! Scissors beats paper."
-    : "You Win! Paper beats rock."
-    );
-  } else {
-    console.log((computerSelection === "rock")
-    ? "You Loose! Rock beats scissors."
-    : "You Win! Scissors beats paper."
-    )
-  }
-}
-
