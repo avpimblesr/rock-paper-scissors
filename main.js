@@ -62,7 +62,7 @@ function playRound(e) {
       if (playersChoice == 'rock') {
         winningText = "Player wins! Rock smashes scissors.";
       } else {
-        winningText = "Computer wins! Sissors cuts paper.";
+        winningText = "Computer wins! Scissors cuts paper.";
       }
       break;
   }
